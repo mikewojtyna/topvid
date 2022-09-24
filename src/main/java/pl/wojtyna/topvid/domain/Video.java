@@ -1,4 +1,4 @@
-package pl.wojtyna.topvid;
+package pl.wojtyna.topvid.domain;
 
 public record Video(int size, byte[] content) {
 

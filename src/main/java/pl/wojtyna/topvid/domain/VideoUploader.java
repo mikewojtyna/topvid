@@ -1,4 +1,4 @@
-package pl.wojtyna.topvid;
+package pl.wojtyna.topvid.domain;
 
 import lombok.NonNull;
 
@@ -9,7 +9,7 @@ public class VideoUploader {
 
     private int uploadedVideos;
 
-    DomainEvents upload(@NonNull Video video, @NonNull Uploader george) {
+    public DomainEvents upload(@NonNull Video video, @NonNull Uploader george) {
         if (video.size() > 256 || new String(video.content(),
                                              StandardCharsets.UTF_8).matches("^.*violen.*") || uploadedVideos >= george.limit()) {
             return new DomainEvents(List.of(new VideoRejected()));
