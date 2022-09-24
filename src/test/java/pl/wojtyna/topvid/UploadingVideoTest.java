@@ -1,7 +1,8 @@
 package pl.wojtyna.topvid;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,14 +12,24 @@ class UploadingVideoTest {
     // @formatter:off
     @DisplayName(
         """
-         any video can be uploaded
+         only videos up to 256 MBs can be uploaded
         """
     )
+    @ParameterizedTest(name = "given size: {0} MB; can video be uploaded? {1}")
+    @CsvSource({
+        "0, true",
+        "1, true",
+        "64, true",
+        "128, true",
+        "256, true",
+        "257, false",
+        "512, false",
+        "1024, false"
+    })
     // @formatter:on
-    @Test
-    void uploadAnyVideoTest() {
+    void uploadVideoTest(int sizeInMB, boolean expectedResult) {
         // given
-        var video = new Video(64);
+        var video = new Video(sizeInMB);
         var videoUploader = new VideoUploader();
 
         // when
@@ -26,28 +37,7 @@ class UploadingVideoTest {
 
         // then
         boolean videoIsUploaded = events.hasOccurredEventOfType(VideoUploaded.class);
-        assertThat(videoIsUploaded).isTrue();
+        assertThat(videoIsUploaded).isEqualTo(expectedResult);
     }
 
-    // @formatter:off
-    @DisplayName(
-        """
-         cannot upload video bigger than 256 MB
-        """
-    )
-    // @formatter:on
-    @Test
-    void uploadBigVideoTest() {
-        // given
-        int size = 257;
-        var video = new Video(size);
-        var videoUploader = new VideoUploader();
-
-        // when
-        var events = videoUploader.upload(video);
-
-        // then
-        assertThat(events.hasOccurredEventOfType(VideoAccepted.class)).isFalse();
-        assertThat(events.hasOccurredEventOfType(VideoRejected.class)).isTrue();
-    }
 }
