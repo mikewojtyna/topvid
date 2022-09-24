@@ -1,6 +1,6 @@
 package pl.wojtyna.topvid;
 
-public record Video(int size) {
+public record Video(int size, byte[] content) {
 
     public Video {
         if (size < 0) {
