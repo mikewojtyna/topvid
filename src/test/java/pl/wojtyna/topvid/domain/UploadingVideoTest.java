@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import pl.wojtyna.topvid.infrastructure.InMemoryUserDetailsRepository;
 
 import java.nio.charset.StandardCharsets;
 
@@ -14,10 +15,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UploadingVideoTest {
 
     private VideoUploader videoUploader;
+    private UserDetailsRepository userDetailsRepository;
 
     @BeforeEach
     void setup() {
-        this.videoUploader = new VideoUploader();
+        userDetailsRepository = new InMemoryUserDetailsRepository();
+        setLimits(george(), Integer.MAX_VALUE);
+        this.videoUploader = new VideoUploader(new DefaultUploadPolicy(), userDetailsRepository);
     }
 
     // @formatter:off
@@ -41,7 +45,7 @@ class UploadingVideoTest {
     void uploadVideoTest(int sizeInMB, boolean expectedResult) {
         // given
         var video = videoOfSize(sizeInMB);
-        var george = new Uploader(10);
+        var george = george();
 
         // when
         var events = videoUploader.upload(video, george);
@@ -65,7 +69,7 @@ class UploadingVideoTest {
         // given
         byte[] content = "some violent video".getBytes(StandardCharsets.UTF_8);
         var video = new Video(64, content);
-        var george = new Uploader(10);
+        var george = george();
 
         // when
         var domainEvents = videoUploader.upload(video, george);
@@ -86,7 +90,8 @@ class UploadingVideoTest {
     @Test
     void uploadLimitTest() {
         // given
-        var george = new Uploader(2);
+        var george = george();
+        setLimits(george, 2);
         videoUploader.upload(videoOfSize(64), george);
         videoUploader.upload(videoOfSize(64), george);
         var thirdVideo = videoOfSize(64);
@@ -110,7 +115,8 @@ class UploadingVideoTest {
     @Test
     void uploadLimit1VideoTest() {
         // given
-        var george = new Uploader(1);
+        var george = george();
+        setLimits(george, 1);
         videoUploader.upload(videoOfSize(64), george);
         var thirdVideo = videoOfSize(64);
 
@@ -119,6 +125,14 @@ class UploadingVideoTest {
 
         // then
         assertThat(domainEvents.hasOccurredEventOfType(VideoRejected.class)).isTrue();
+    }
+
+    private void setLimits(Uploader uploader, int limits) {
+        userDetailsRepository.save(new UserDetails(uploader.id(), 0, limits));
+    }
+
+    private Uploader george() {
+        return new Uploader(new UserId("george"));
     }
 
     private Video videoOfSize(int sizeInMB) {

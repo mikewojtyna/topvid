@@ -1,20 +1,34 @@
 package pl.wojtyna.topvid.domain;
 
 import lombok.NonNull;
+import pl.wojtyna.topvid.patterns.InversionOfControl;
+import pl.wojtyna.topvid.patterns.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+@Service
 public class VideoUploader {
 
-    private int uploadedVideos;
+    @NonNull
+    private final UploadPolicy uploadPolicy;
+    @NonNull
+    private final UserDetailsRepository userDetailsRepository;
 
-    public DomainEvents upload(@NonNull Video video, @NonNull Uploader george) {
-        if (video.size() > 256 || new String(video.content(),
-                                             StandardCharsets.UTF_8).matches("^.*violen.*") || uploadedVideos >= george.limit()) {
-            return new DomainEvents(List.of(new VideoRejected()));
-        }
-        uploadedVideos++;
-        return new DomainEvents(List.of(new VideoUploaded()));
+    @InversionOfControl
+    public VideoUploader(@NonNull UploadPolicy uploadPolicy, @NonNull UserDetailsRepository userDetailsRepository) {
+        this.uploadPolicy = uploadPolicy;
+        this.userDetailsRepository = userDetailsRepository;
+    }
+
+    public DomainEvents upload(@NonNull Video video, @NonNull Uploader uploader) {
+        return userDetailsRepository.by(uploader.id())
+                                    .filter(userDetails -> uploadPolicy.isVideoAcceptable(video, userDetails))
+                                    .map(userDetails -> {
+                                        var updatedUserDetails = new UserDetails(uploader.id(),
+                                                                                 userDetails.uploadedVideos() + 1,
+                                                                                 userDetails.uploadSoftLimit());
+                                        userDetailsRepository.save(updatedUserDetails);
+                                        return new DomainEvents(List.of(new VideoUploaded()));
+                                    }).orElse(new DomainEvents(List.of(new VideoRejected())));
     }
 }

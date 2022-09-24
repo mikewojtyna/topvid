@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.wojtyna.topvid.domain.Uploader;
+import pl.wojtyna.topvid.domain.UserId;
 import pl.wojtyna.topvid.domain.Video;
 import pl.wojtyna.topvid.domain.VideoUploader;
 
@@ -26,6 +27,6 @@ public class UploadVideoRestApi {
     public void upload(@RequestParam("file") MultipartFile multipartFile,
                        @RequestParam("identity") String identity) throws IOException {
         videoUploader.upload(new Video(Math.toIntExact(multipartFile.getSize()), multipartFile.getBytes()),
-                             new Uploader(3));
+                             new Uploader(new UserId(identity)));
     }
 }
