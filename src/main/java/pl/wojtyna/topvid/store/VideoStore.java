@@ -1,12 +1,11 @@
 package pl.wojtyna.topvid.store;
 
 import lombok.NonNull;
-import pl.wojtyna.topvid.patterns.ServicePattern;
 import pl.wojtyna.topvid.patterns.StrategyPattern;
 
 import java.util.Optional;
 
-@ServicePattern
+
 @StrategyPattern
 public interface VideoStore {
 
