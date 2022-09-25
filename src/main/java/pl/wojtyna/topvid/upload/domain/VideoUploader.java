@@ -2,12 +2,12 @@ package pl.wojtyna.topvid.upload.domain;
 
 import lombok.NonNull;
 import pl.wojtyna.topvid.common.domain.DomainEvents;
-import pl.wojtyna.topvid.patterns.InversionOfControl;
-import pl.wojtyna.topvid.patterns.Service;
+import pl.wojtyna.topvid.patterns.InversionOfControlPattern;
+import pl.wojtyna.topvid.patterns.ServicePattern;
 
 import java.util.List;
 
-@Service
+@ServicePattern
 public class VideoUploader {
 
     @NonNull
@@ -15,7 +15,7 @@ public class VideoUploader {
     @NonNull
     private final UserDetailsRepository userDetailsRepository;
 
-    @InversionOfControl
+    @InversionOfControlPattern
     public VideoUploader(@NonNull UploadPolicy uploadPolicy, @NonNull UserDetailsRepository userDetailsRepository) {
         this.uploadPolicy = uploadPolicy;
         this.userDetailsRepository = userDetailsRepository;

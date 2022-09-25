@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import pl.wojtyna.topvid.common.domain.UserId;
+import pl.wojtyna.topvid.upload.domain.policies.UploadPolicies;
 import pl.wojtyna.topvid.upload.infrastructure.InMemoryUserDetailsRepository;
 
 import java.nio.charset.StandardCharsets;
@@ -22,7 +23,11 @@ class UploadingVideoTest {
     void setup() {
         userDetailsRepository = new InMemoryUserDetailsRepository();
         setLimits(george(), Integer.MAX_VALUE);
-        this.videoUploader = new VideoUploader(new DefaultUploadPolicy(), userDetailsRepository);
+        var uploadPolicies = UploadPolicies.instance();
+        var uploadPolicy = uploadPolicies.maxSize(256)
+                                         .and(uploadPolicies.userUploadLimits())
+                                         .and(uploadPolicies.violentContent());
+        this.videoUploader = new VideoUploader(uploadPolicy, userDetailsRepository);
     }
 
     // @formatter:off

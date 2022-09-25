@@ -2,11 +2,11 @@ package pl.wojtyna.topvid.upload.domain;
 
 import lombok.NonNull;
 import pl.wojtyna.topvid.common.domain.UserId;
-import pl.wojtyna.topvid.patterns.Repository;
+import pl.wojtyna.topvid.patterns.RepositoryPattern;
 
 import java.util.Optional;
 
-@Repository
+@RepositoryPattern
 public interface UserDetailsRepository {
 
     Optional<UserDetails> by(@NonNull UserId id);

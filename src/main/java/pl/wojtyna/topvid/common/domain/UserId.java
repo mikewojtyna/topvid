@@ -1,8 +1,8 @@
 package pl.wojtyna.topvid.common.domain;
 
 import lombok.NonNull;
-import pl.wojtyna.topvid.patterns.ValueObject;
+import pl.wojtyna.topvid.patterns.ValueObjectPattern;
 
-@ValueObject
+@ValueObjectPattern
 public record UserId(@NonNull String id) {
 }

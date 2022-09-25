@@ -1,8 +1,8 @@
 package pl.wojtyna.topvid.upload.domain;
 
-import pl.wojtyna.topvid.patterns.ValueObject;
+import pl.wojtyna.topvid.patterns.ValueObjectPattern;
 
-@ValueObject
+@ValueObjectPattern
 public record Video(int size, byte[] content) {
 
     public Video {
