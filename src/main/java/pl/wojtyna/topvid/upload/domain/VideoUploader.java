@@ -6,7 +6,6 @@ import pl.wojtyna.topvid.patterns.InversionOfControlPattern;
 import pl.wojtyna.topvid.patterns.ServicePattern;
 
 import java.util.List;
-import java.util.UUID;
 
 @ServicePattern
 public class VideoUploader {
@@ -30,14 +29,12 @@ public class VideoUploader {
                                                                                  userDetails.uploadedVideos() + 1,
                                                                                  userDetails.uploadSoftLimit());
                                         userDetailsRepository.save(updatedUserDetails);
-                                        return new DomainEvents(List.of(new VideoUploaded(uniqueName(),
+                                        return new DomainEvents(List.of(new VideoUploaded(video.name(),
                                                                                           video.size(),
                                                                                           uploader,
                                                                                           video.content())));
-                                    }).orElse(new DomainEvents(List.of(new VideoRejected())));
+                                    })
+                                    .orElse(new DomainEvents(List.of(new VideoRejected())));
     }
 
-    private String uniqueName() {
-        return "video-" + UUID.randomUUID();
-    }
 }

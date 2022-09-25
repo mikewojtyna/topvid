@@ -74,7 +74,7 @@ class UploadingVideoTest {
     void illegalContentTest() {
         // given
         byte[] content = "some violent video".getBytes(StandardCharsets.UTF_8);
-        var video = new Video(64, content);
+        var video = new Video("violent-video.mp4", 64, content);
         var george = george();
 
         // when
@@ -142,7 +142,7 @@ class UploadingVideoTest {
     }
 
     private Video videoOfSize(int sizeInMB) {
-        return new Video(sizeInMB, "any content".getBytes(StandardCharsets.UTF_8));
+        return new Video("violent-video.mp4", sizeInMB, "any content".getBytes(StandardCharsets.UTF_8));
     }
 
 }

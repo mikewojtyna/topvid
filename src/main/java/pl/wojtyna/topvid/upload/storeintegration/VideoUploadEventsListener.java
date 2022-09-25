@@ -9,12 +9,12 @@ import pl.wojtyna.topvid.store.VideoStore;
 import pl.wojtyna.topvid.upload.domain.VideoUploaded;
 
 @AclPattern
-public class UploadEventsListener implements DomainEventListener {
+public class VideoUploadEventsListener implements DomainEventListener {
 
     @NonNull
     private final VideoStore videoStore;
 
-    public UploadEventsListener(@NonNull VideoStore videoStore) {
+    public VideoUploadEventsListener(@NonNull VideoStore videoStore) {
         this.videoStore = videoStore;
     }
 
