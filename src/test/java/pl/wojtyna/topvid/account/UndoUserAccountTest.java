@@ -2,12 +2,14 @@ package pl.wojtyna.topvid.account;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pl.wojtyna.topvid.patterns.MementoPattern;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("User account changes can be undone")
+@MementoPattern
 class UndoUserAccountTest {
 
     // @formatter:off
