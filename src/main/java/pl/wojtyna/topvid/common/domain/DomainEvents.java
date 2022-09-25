@@ -15,4 +15,8 @@ public record DomainEvents(@NonNull List<DomainEvent> events) {
         return events.stream().map(DomainEvent::getClass).anyMatch(domainEventClass -> Objects.equals(domainEventClass,
                                                                                                       type));
     }
+
+    public void publish(@NonNull DomainEventPublisher eventPublisher) {
+        events.forEach(eventPublisher::publish);
+    }
 }
