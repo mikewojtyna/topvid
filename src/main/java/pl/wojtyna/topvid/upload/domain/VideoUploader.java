@@ -1,6 +1,7 @@
-package pl.wojtyna.topvid.domain;
+package pl.wojtyna.topvid.upload.domain;
 
 import lombok.NonNull;
+import pl.wojtyna.topvid.common.domain.DomainEvents;
 import pl.wojtyna.topvid.patterns.InversionOfControl;
 import pl.wojtyna.topvid.patterns.Service;
 

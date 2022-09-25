@@ -1,4 +1,4 @@
-package pl.wojtyna.topvid.domain;
+package pl.wojtyna.topvid.upload.domain;
 
 import lombok.NonNull;
 import pl.wojtyna.topvid.patterns.Strategy;

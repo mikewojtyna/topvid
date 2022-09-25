@@ -1,9 +1,9 @@
-package pl.wojtyna.topvid.infrastructure;
+package pl.wojtyna.topvid.upload.infrastructure;
 
 import lombok.NonNull;
-import pl.wojtyna.topvid.domain.UserDetails;
-import pl.wojtyna.topvid.domain.UserDetailsRepository;
-import pl.wojtyna.topvid.domain.UserId;
+import pl.wojtyna.topvid.common.domain.UserId;
+import pl.wojtyna.topvid.upload.domain.UserDetails;
+import pl.wojtyna.topvid.upload.domain.UserDetailsRepository;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;

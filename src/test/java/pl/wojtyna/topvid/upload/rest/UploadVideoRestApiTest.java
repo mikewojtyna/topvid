@@ -1,4 +1,4 @@
-package pl.wojtyna.topvid.rest;
+package pl.wojtyna.topvid.upload.rest;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

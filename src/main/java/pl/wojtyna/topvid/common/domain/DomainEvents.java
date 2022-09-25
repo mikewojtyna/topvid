@@ -1,4 +1,4 @@
-package pl.wojtyna.topvid.domain;
+package pl.wojtyna.topvid.common.domain;
 
 import lombok.NonNull;
 

@@ -1,13 +1,13 @@
-package pl.wojtyna.topvid.rest;
+package pl.wojtyna.topvid.upload.rest;
 
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.wojtyna.topvid.domain.Uploader;
-import pl.wojtyna.topvid.domain.UserId;
-import pl.wojtyna.topvid.domain.Video;
-import pl.wojtyna.topvid.domain.VideoUploader;
+import pl.wojtyna.topvid.common.domain.UserId;
+import pl.wojtyna.topvid.upload.domain.Uploader;
+import pl.wojtyna.topvid.upload.domain.Video;
+import pl.wojtyna.topvid.upload.domain.VideoUploader;
 
 import java.io.IOException;
 
