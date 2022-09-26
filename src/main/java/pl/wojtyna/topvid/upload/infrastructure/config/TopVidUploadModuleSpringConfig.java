@@ -2,6 +2,8 @@ package pl.wojtyna.topvid.upload.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import pl.wojtyna.topvid.common.commandinvoker.CommandInvoker;
+import pl.wojtyna.topvid.common.commandinvoker.InMemoryRepeatableCommandInvoker;
 import pl.wojtyna.topvid.common.domain.DomainEventListener;
 import pl.wojtyna.topvid.common.domain.DomainEventPublisher;
 import pl.wojtyna.topvid.store.VideoStore;
@@ -36,9 +38,15 @@ public class TopVidUploadModuleSpringConfig {
     }
 
     @Bean
+    public CommandInvoker commandInvoker() {
+        return new InMemoryRepeatableCommandInvoker();
+    }
+
+    @Bean
     public VideoUploaderPort videoUploaderPort(VideoUploader videoUploader,
-                                               DomainEventPublisher domainEventPublisher) {
-        return new VideoUploaderPort(videoUploader, domainEventPublisher);
+                                               DomainEventPublisher domainEventPublisher,
+                                               CommandInvoker commandInvoker) {
+        return new VideoUploaderPort(videoUploader, domainEventPublisher, commandInvoker);
     }
 
     @Bean
