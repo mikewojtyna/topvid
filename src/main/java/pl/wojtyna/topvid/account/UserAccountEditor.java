@@ -6,8 +6,10 @@ import pl.wojtyna.topvid.patterns.MementoPattern;
 import pl.wojtyna.topvid.patterns.ServicePattern;
 
 import java.time.LocalDate;
-import java.util.Stack;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentMap;
 
 @MementoPattern
 @ServicePattern
@@ -17,13 +19,13 @@ public class UserAccountEditor {
     private final UserAccountRepository userAccountRepository;
     @NonNull
     private final UserAccountSnapshotRepository userAccountSnapshotRepository;
-    private final Stack<String> snapshotIdsHistory;
+    private final ConcurrentMap<UserId, ConcurrentLinkedDeque<String>> history;
 
     public UserAccountEditor(@NonNull UserAccountRepository userAccountRepository,
                              @NonNull UserAccountSnapshotRepository userAccountSnapshotRepository) {
         this.userAccountRepository = userAccountRepository;
         this.userAccountSnapshotRepository = userAccountSnapshotRepository;
-        this.snapshotIdsHistory = new Stack<>();
+        this.history = new ConcurrentHashMap<>();
     }
 
     public UserAccount createAccount(@NonNull String firstName,
@@ -33,7 +35,7 @@ public class UserAccountEditor {
         userAccountRepository.save(userAccount);
         var snapshot = userAccount.createSnapshot();
         userAccountSnapshotRepository.save(snapshot);
-        snapshotIdsHistory.push(snapshot.getId());
+        history.computeIfAbsent(userAccount.getId(), userId -> new ConcurrentLinkedDeque<>()).add(snapshot.getId());
         return userAccount;
     }
 
@@ -41,7 +43,7 @@ public class UserAccountEditor {
         userAccountRepository.byId(id).ifPresent(userAccount -> {
             var snapshot = userAccount.createSnapshot();
             userAccountSnapshotRepository.save(snapshot);
-            snapshotIdsHistory.push(snapshot.getId());
+            history.computeIfAbsent(userAccount.getId(), userId -> new ConcurrentLinkedDeque<>()).add(snapshot.getId());
             userAccount.setFirstName(firstName);
             userAccountRepository.save(userAccount);
         });
@@ -49,13 +51,16 @@ public class UserAccountEditor {
 
     public void undo(@NonNull UserId userId) {
         userAccountRepository.byId(userId).ifPresent(userAccount -> {
-            if (!snapshotIdsHistory.empty()) {
-                var snapshotId = snapshotIdsHistory.peek();
-                userAccountSnapshotRepository.byId(snapshotId).ifPresent(snapshot -> {
-                    userAccount.restore(snapshot);
-                    userAccountRepository.save(userAccount);
-                    snapshotIdsHistory.pop();
-                });
+            var snapshots = history.get(userId);
+            if (snapshots != null) {
+                if (!snapshots.isEmpty()) {
+                    var snapshotId = snapshots.peekLast();
+                    userAccountSnapshotRepository.byId(snapshotId).ifPresent(snapshot -> {
+                        userAccount.restore(snapshot);
+                        userAccountRepository.save(userAccount);
+                        snapshots.removeLast();
+                    });
+                }
             }
         });
     }
