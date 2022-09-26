@@ -5,15 +5,11 @@ import pl.wojtyna.topvid.patterns.DecoratorPattern;
 import pl.wojtyna.topvid.patterns.PrimaryPortPattern;
 import pl.wojtyna.topvid.patterns.StrategyPattern;
 
-import java.util.Optional;
-
 
 @StrategyPattern
 @PrimaryPortPattern
 @DecoratorPattern
-public interface VideoStore {
+public interface VideoStore extends VideoContentResolver {
 
     void store(@NonNull Video video);
-
-    Optional<byte[]> contentOf(@NonNull String name);
 }
