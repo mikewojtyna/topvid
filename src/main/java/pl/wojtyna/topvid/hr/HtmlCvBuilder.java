@@ -25,7 +25,7 @@ public class HtmlCvBuilder implements CvBuilder {
 
     @Override
     public CvBuilder handleFooter(String content) {
-        this.content += "<div id='footer'>" + content + "</div>";
+        this.content += "<div id='footer'><b>" + content + "</b></div>";
         return this;
     }
 

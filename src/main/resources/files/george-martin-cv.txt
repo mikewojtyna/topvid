@@ -8,8 +8,7 @@ I'm an experienced Senior Software Developer
 I help teams to build better software by following Design Patterns
 
 ::Paragraph::
-Intern (IBM, 2005-2006), Junior Software Developer (Oracle, 2006-2009), Senior
-Software Engineer (Consult Red, 2010-2022)
+Intern (IBM, 2005-2006), Junior Software Developer (Oracle, 2006-2009), Senior Software Engineer (Consult Red, 2010-2022)
 
 ::Footer::
 Looking forward to hearing from you soon!
