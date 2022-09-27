@@ -3,7 +3,7 @@ package pl.wojtyna.topvid.singleton.calculator;
 class CalculatorSingleton {
 
     private static final Object guard = new Object();
-    private static CalculatorSingleton instance;
+    private static volatile CalculatorSingleton instance;
     private final SomeVeryComplexExternalService externalService;
 
     private CalculatorSingleton(SomeVeryComplexExternalService externalService) {
@@ -26,7 +26,7 @@ class CalculatorSingleton {
     }
 
     private static SomeVeryComplexExternalService createExternalService() {
-        return (x, y) -> x + y;
+        return Integer::sum;
     }
 
     int add(int x, int y) {
