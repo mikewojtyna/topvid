@@ -12,15 +12,18 @@ public class UploadRestApi extends BaseApi {
 
     private static final int MAX_SIZE = 1024;
     private final StoreManager storeManager = StoreManager.getInstance();
+    private VideoAcceptanceStrategy videoAcceptanceStrategy;
 
     @PostMapping
     public void upload(@RequestBody Video video, HttpServletRequest request) {
         User user = currentUser(request);
-        var executionContext = ExecutionContext.of(user);
-        var videoStorage = storeManager.storageInstance(executionContext);
-        if (video.size() > MAX_SIZE) {
-            throw new RuntimeException("size is too big");
+        if (videoAcceptanceStrategy.isAcceptable(video, user)) {
+            var executionContext = ExecutionContext.of(user);
+            var videoStorage = storeManager.storageInstance(executionContext);
+            if (video.size() > MAX_SIZE) {
+                throw new RuntimeException("size is too big");
+            }
+            videoStorage.store(video);
         }
-        videoStorage.store(video);
     }
 }
